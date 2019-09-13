@@ -1,0 +1,12 @@
+#!/bin/bash
+export WD=$PWD
+bash --rcfile <( echo '. ~/.bashrc
+autocommit() {
+  CMD=$(history 1|head -1|cut -c8-)
+  pushd '$WD'             > /dev/null
+  git add .               > /dev/null
+  git commit -a -m "$CMD" > /dev/null
+  popd                    > /dev/null
+}
+PROMPT_COMMAND=autocommit
+')
