@@ -8,5 +8,6 @@ autocommit() {
   git commit -a -m "$CMD" > /dev/null
   popd                    > /dev/null
 }
+PS1="${PS1}autocommit> "
 PROMPT_COMMAND=autocommit
 ')
