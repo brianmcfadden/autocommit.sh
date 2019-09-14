@@ -2,7 +2,9 @@ autocommit is a program that automatically commits everything that you put into 
 
 It uses the last history command as the git message, so you can know what you typed, and what you edited.
 
-I think that this is either very useful or very, very stupid, and I'm not sure which.
+Added bonus: you can still put your own tet into the commit message by ending the command with # followed by the comment
+
+New feature: changed PS1 so that we know we're autocommitting
 
 -------------------------------------------------------------------------------
 Script started on 2019-09-13 05:17:53-04:00 [TERM="xterm-256color" TTY="/dev/pts/5" COLUMNS="176" LINES="43"]
