@@ -1,4 +1,41 @@
 #!/bin/bash
+
+check_git() {
+  git ls-files -dmo --exclude-standard
+}
+
+echo -n "" & P=$! # initialize P=invaid process ID
+(
+inotifywait --exclude '(^./.git/)|(.swp$)|(.swpx$)' -r -q -m -e close_write -e delete -e attrib . | while read E
+do
+  echo $E
+  if ps $P > /dev/null
+  then
+    echo kill P=$P
+    kill -9 $P > /dev/null 2>&1
+  fi
+  if [ "$(check_git)" != "" ]
+  then
+    (
+      ( zenity --text="$(git status)" --entry
+        [ -n "$T" ] && (
+          git add .
+          git commit -m "$T"
+        )
+      ) &
+      echo $!
+    ) > /tmp/xxx 2>/dev/null
+    PP=$(cat /tmp/xxx)
+    P=""
+    while [ "$P" == "" ]
+    do
+      P=$(ps --no-headers --ppid $PP |awk '{print $1;}')
+    done
+  fi
+done
+) >/dev/null 2>&1 &
+echo $!
+I=$(ps --no-headers --ppid $! |awk '{print $1;}')
 export WD=$PWD
 bash --rcfile <( echo '. ~/.bashrc
 autocommit() {
@@ -11,3 +48,4 @@ autocommit() {
 PS1="${PS1}autocommit> "
 PROMPT_COMMAND=autocommit
 ')
+kill -9 $I > /dev/null 2>&1
